@@ -2,10 +2,11 @@ import dataAccessor from '../../../utils/dataAccessor';
 
 export default {
 
-    async createSequencer ({ commit }, { sequencerType, pipeLineType, sequencerArgs }) {
+    async createSequencer ({ commit }, { sequencerType, pipeLineType, sequenceArgs }) {
         commit('setCreateSequencerLoadingState', 'LOADING');
+        console.log(sequenceArgs);
         const sequencerData = await dataAccessor.createGenerator({
-            sequencerType, pipeLineType, sequencerArgs
+            sequencerType, pipeLineType, sequenceArgs
         });
         commit('setCreateSequencerData', sequencerData.data);
         commit('setCreateSequencerLoadingState', 'LOADING_SUCCESSFUL');

@@ -28,9 +28,10 @@ async function _makePutRequest (path, data) {
 
 export default {
     async createGenerator ({
-        sequencerType, pipeLineType, sequencerArgs
+        sequencerType, pipeLineType, sequenceArgs
     }) {
-        const data = await _makePostRequest('/v1.0/sequencer', { sequencerType, pipeLineType, sequencerArgs });
+        console.log('IN dataAccessor: ', sequenceArgs);
+        const data = await _makePostRequest('/v1.0/sequencer', { sequencerType, pipeLineType, sequenceArgs });
         return data;
     },
 

@@ -21,11 +21,32 @@
             </option>
         </select>
 
+        <select v-model="selectedPipeline">
+            <option :value="'NONE'">
+                None
+            </option>
+            <option :value="'ACCUMULATOR'">
+                Accumulator
+            </option>
+            <option :value="'IS_EVEN'">
+                Is Even
+            </option>
+        </select>
+
+        <div class="">
+            <button type="button" name="button" v-if="canHaveNArgument" @click="addArgument">Add Argument</button>
+
+            <div class="" :key="index" v-for="(eachSequenceArg, index) in sequenceArgs">
+                <label>{{ (placeholderConfig[selectedSeries] && placeholderConfig[selectedSeries][index]) ? placeholderConfig[selectedSeries][index] : `Argument ${index + 1}` }}</label>
+                <input type="number" v-model="sequenceArgs[index]" >
+            </div>
+        </div>
+
         <button @click="create">
             Create Generator
         </button>
 
-        <div class="">
+        <div class="" v-if="currentSequencer.type">
             {{ currentSequencer.type }}
             <button @click="getNextSequence">
                 Next!
@@ -33,12 +54,12 @@
         </div>
 
         <div class="">
-            <li
+            <div
                 v-for="(eachSequenceData, index) in nextSequence"
                 :key="index"
             >
                 {{ eachSequenceData }}
-            </li>
+            </div>
         </div>
     </div>
 </template>
@@ -53,7 +74,20 @@ export default {
     name: 'Sequencer',
     data () {
         return {
-            selectedSeries: 'FIBONACCI'
+            selectedSeries: 'FIBONACCI',
+            selectedPipeline: 'ACCUMULATOR',
+            sequenceArgs: [],
+            argumentConfig: {
+                PARTIAL_SUM: Infinity,
+                RANGE: 2
+            },
+            placeholderConfig: {
+                RANGE: [
+                    'Start',
+                    'Step'
+                ]
+            },
+            canHaveNArgument: false
         };
     },
     computed: {
@@ -65,16 +99,34 @@ export default {
             'nextSequenceLoadingState'
         ])
     },
+    watch: {
+        selectedSeries (newSelection) {
+            const numOfArgument = this.argumentConfig[newSelection];
+
+            if (numOfArgument === Infinity) {
+                this.canHaveNArgument = true;
+                this.sequenceArgs = Array(1);
+            } else if (numOfArgument > 0) {
+                this.sequenceArgs = Array(numOfArgument);
+            } else {
+                this.sequenceArgs = Array(0);
+            }
+        }
+    },
     methods: {
         ...mapActions('sequencer', [
             'createSequencer',
             'getNextSequence'
         ]),
+        addArgument () {
+            this.sequenceArgs.push(undefined);
+        },
         create () {
+            console.log(this.sequenceArgs);
             this.createSequencer({
                 sequencerType: this.selectedSeries,
-                pipeLineType: this.pipeLineType,
-                sequencerArgs: this.sequencerArgs
+                pipeLineType: this.selectedPipeline,
+                sequenceArgs: this.sequenceArgs
             });
         }
     }
