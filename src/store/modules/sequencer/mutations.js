@@ -7,6 +7,7 @@ export default {
         state.createdSequencer.data = data;
         state.sequencers.data.push(data);
         state.currentSequencer = data;
+        state.nextSequence.data = [];
     },
 
     setNextSequenceLoadingState (state, loadingState) {

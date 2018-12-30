@@ -1,56 +1,48 @@
 <template>
     <div class="hello">
         <h1>Sequencer</h1>
-        <!-- <Dropdown /> -->
+        <Dropdown
+            :options="[
+                { value: 'FIBONACCI', text: 'Fibonacci Series' },
+                { value: 'FACTORIAL', text: 'Factorial Series' },
+                { value: 'PARTIAL_SUM', text: 'Partial Sum Series' },
+                { value: 'PRIME', text: 'Prime Series' },
+                { value: 'RANGE', text: 'Range Series' },
+            ]"
+            :preSelected="selectedSeries"
+            :onChange="onSeriesChange"
+            :label="'Sequencer Type'"
+        />
 
-        <select v-model="selectedSeries">
-            <option value="FIBONACCI">
-                Fibonacci Series
-            </option>
-            <option value="FACTORIAL">
-                Factorial
-            </option>
-            <option value="PARTIAL_SUM">
-                Partial Sum
-            </option>
-            <option value="PRIME">
-                Prime
-            </option>
-            <option value="RANGE">
-                Range
-            </option>
-        </select>
-
-        <select v-model="selectedPipeline">
-            <option :value="'NONE'">
-                None
-            </option>
-            <option :value="'ACCUMULATOR'">
-                Accumulator
-            </option>
-            <option :value="'IS_EVEN'">
-                Is Even
-            </option>
-        </select>
+        <Dropdown
+            :options="[
+                { value: 'NONE', text: 'None' },
+                { value: 'ACCUMULATOR', text: 'Accumulator' },
+                { value: 'IS_EVEN', text: 'Is Even' }
+            ]"
+            :preSelected="selectedPipeline"
+            :onChange="onPipelineChange"
+            :label="'Pipeline Type'"
+        />
 
         <div class="">
             <button type="button" name="button" v-if="canHaveNArgument" @click="addArgument">Add Argument</button>
 
-            <div class="" :key="index" v-for="(eachSequenceArg, index) in sequenceArgs">
-                <label>{{ (placeholderConfig[selectedSeries] && placeholderConfig[selectedSeries][index]) ? placeholderConfig[selectedSeries][index] : `Argument ${index + 1}` }}</label>
-                <input type="number" v-model="sequenceArgs[index]" >
-            </div>
+            <Input
+                :key="index" v-for="(eachSequenceArg, index) in sequenceArgs"
+                :onChange="onArgumentChange.bind(this, index)"
+                :labelText="(placeholderConfig[selectedSeries] && placeholderConfig[selectedSeries][index]) ? placeholderConfig[selectedSeries][index] : `Argument ${index + 1}`"
+            />
         </div>
 
-        <button @click="create">
-            Create Generator
-        </button>
+        <Button :onClick="create" :text="'Create Generator'" />
 
-        <div class="" v-if="currentSequencer.type">
-            {{ currentSequencer.type }}
-            <button @click="getNextSequence">
-                Next!
-            </button>
+        <hr />
+
+        <div class="" v-if="currentSequencer.uuid" >
+            <h2>Current Sequence - {{ currentSequencer.type }}</h2>
+            <div>ID: {{ currentSequencer.uuid }}</div>
+            <Button :onClick="getNextSequence" :text="'Next!'" />
         </div>
 
         <div class="">
@@ -65,6 +57,9 @@
 </template>
 
 <script>
+import Dropdown from './common/Dropdown';
+import Input from './common/Input';
+import Button from './common/Button';
 import {
     mapActions,
     mapGetters
@@ -75,7 +70,7 @@ export default {
     data () {
         return {
             selectedSeries: 'FIBONACCI',
-            selectedPipeline: 'ACCUMULATOR',
+            selectedPipeline: 'NONE',
             sequenceArgs: [],
             argumentConfig: {
                 PARTIAL_SUM: Infinity,
@@ -118,6 +113,15 @@ export default {
             'createSequencer',
             'getNextSequence'
         ]),
+        onSeriesChange(e) {
+            this.selectedSeries = e.target.value;
+        },
+        onPipelineChange(e) {
+            this.selectedPipeline = e.target.value;
+        },
+        onArgumentChange(index, e) {
+            this.sequenceArgs[index] = e.target.value;
+        },
         addArgument () {
             this.sequenceArgs.push(undefined);
         },
@@ -129,6 +133,11 @@ export default {
                 sequenceArgs: this.sequenceArgs
             });
         }
+    },
+    components: {
+        Dropdown,
+        Input,
+        Button
     }
 };
 </script>

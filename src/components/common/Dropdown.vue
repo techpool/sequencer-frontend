@@ -1,26 +1,54 @@
 <template>
-    <div>
-        <select>
-            <option value="volvo">
-                Volvo
-            </option>
-            <option value="saab">
-                Saab
-            </option>
-            <option value="mercedes">
-                Mercedes
-            </option>
-            <option value="audi">
-                Audi
+    <div class="dropdown">
+        <label>{{ label }}</label>
+        <select @change="onChange">
+            <option :selected="eachOption.value === preSelected" :key="index" v-for="(eachOption, index) in options" :value="eachOption.value">
+                {{ eachOption.text }}
             </option>
         </select>
     </div>
 </template>
 
 <script type="text/javascript">
-
+export default {
+    name: 'Dropdown',
+    props: {
+        options: {
+            type: Array,
+            required: true
+        },
+        onChange: {
+            type: Function,
+            required: true
+        },
+        label: {
+            type: String,
+            required: true
+        },
+        preSelected: {
+            type: String,
+            required: false
+        }
+    }
+}
 </script>
 
-<style media="screen" lang="scss">
+<style scoped>
+.dropdown {
+    width: 50%;
+    margin: auto;
+    text-align: left;
+    font-size: 1.4em;
+}
 
+.dropdown label {
+    width: 50%;
+    display: inline-block;
+}
+
+.dropdown select {
+    width: 50%;
+    display: inline-block;
+    font-size: 16px;
+}
 </style>
