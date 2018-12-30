@@ -9,8 +9,8 @@
                 { value: 'PRIME', text: 'Prime Series' },
                 { value: 'RANGE', text: 'Range Series' },
             ]"
-            :preSelected="selectedSeries"
-            :onChange="onSeriesChange"
+            :pre-selected="selectedSeries"
+            :on-change="onSeriesChange"
             :label="'Sequencer Type'"
         />
 
@@ -20,29 +20,46 @@
                 { value: 'ACCUMULATOR', text: 'Accumulator' },
                 { value: 'IS_EVEN', text: 'Is Even' }
             ]"
-            :preSelected="selectedPipeline"
-            :onChange="onPipelineChange"
+            :pre-selected="selectedPipeline"
+            :on-change="onPipelineChange"
             :label="'Pipeline Type'"
         />
 
         <div class="">
-            <button type="button" name="button" v-if="canHaveNArgument" @click="addArgument">Add Argument</button>
+            <button
+                v-if="canHaveNArgument"
+                type="button"
+                name="button"
+                @click="addArgument"
+            >
+                Add Argument
+            </button>
 
             <Input
-                :key="index" v-for="(eachSequenceArg, index) in sequenceArgs"
-                :onChange="onArgumentChange.bind(this, index)"
-                :labelText="(placeholderConfig[selectedSeries] && placeholderConfig[selectedSeries][index]) ? placeholderConfig[selectedSeries][index] : `Argument ${index + 1}`"
+                v-for="(eachSequenceArg, index) in sequenceArgs"
+                :key="index"
+                :on-change="onArgumentChange.bind(this, index)"
+                :label-text="(placeholderConfig[selectedSeries] && placeholderConfig[selectedSeries][index]) ? placeholderConfig[selectedSeries][index] : `Argument ${index + 1}`"
             />
         </div>
 
-        <Button :onClick="create" :text="'Create Generator'" />
+        <Button
+            :on-click="create"
+            :text="'Create Generator'"
+        />
 
-        <hr />
+        <hr>
 
-        <div class="" v-if="currentSequencer.uuid" >
+        <div
+            v-if="currentSequencer.uuid"
+            class=""
+        >
             <h2>Current Sequence - {{ currentSequencer.type }}</h2>
             <div>ID: {{ currentSequencer.uuid }}</div>
-            <Button :onClick="getNextSequence" :text="'Next!'" />
+            <Button
+                :on-click="getNextSequence"
+                :text="'Next!'"
+            />
         </div>
 
         <div class="">
@@ -57,16 +74,22 @@
 </template>
 
 <script>
-import Dropdown from './common/Dropdown';
-import Input from './common/Input';
-import Button from './common/Button';
 import {
     mapActions,
     mapGetters
 } from 'vuex';
 
+import Button from './common/Button';
+import Dropdown from './common/Dropdown';
+import Input from './common/Input';
+
 export default {
     name: 'Sequencer',
+    components: {
+        Dropdown,
+        Input,
+        Button
+    },
     data () {
         return {
             selectedSeries: 'FIBONACCI',
@@ -113,13 +136,13 @@ export default {
             'createSequencer',
             'getNextSequence'
         ]),
-        onSeriesChange(e) {
+        onSeriesChange (e) {
             this.selectedSeries = e.target.value;
         },
-        onPipelineChange(e) {
+        onPipelineChange (e) {
             this.selectedPipeline = e.target.value;
         },
-        onArgumentChange(index, e) {
+        onArgumentChange (index, e) {
             this.sequenceArgs[index] = e.target.value;
         },
         addArgument () {
@@ -133,11 +156,6 @@ export default {
                 sequenceArgs: this.sequenceArgs
             });
         }
-    },
-    components: {
-        Dropdown,
-        Input,
-        Button
     }
 };
 </script>

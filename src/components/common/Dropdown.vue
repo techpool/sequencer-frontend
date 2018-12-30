@@ -2,7 +2,12 @@
     <div class="dropdown">
         <label>{{ label }}</label>
         <select @change="onChange">
-            <option :selected="eachOption.value === preSelected" :key="index" v-for="(eachOption, index) in options" :value="eachOption.value">
+            <option
+                v-for="(eachOption, index) in options"
+                :key="index"
+                :selected="eachOption.value === preSelected"
+                :value="eachOption.value"
+            >
                 {{ eachOption.text }}
             </option>
         </select>
@@ -27,10 +32,10 @@ export default {
         },
         preSelected: {
             type: String,
-            required: false
+            required: true
         }
     }
-}
+};
 </script>
 
 <style scoped>

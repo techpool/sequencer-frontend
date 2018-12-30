@@ -1,7 +1,10 @@
 <template>
     <div>
         <label>{{ labelText }}</label>
-        <input type="number" @input="onChange">
+        <input
+            type="number"
+            @input="onChange"
+        >
     </div>
 </template>
 
@@ -18,7 +21,7 @@ export default {
             required: true
         }
     }
-}
+};
 </script>
 
 <style media="screen" lang="scss">
